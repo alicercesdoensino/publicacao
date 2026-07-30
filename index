@@ -1,0 +1,111 @@
+<!-- 
+  E-MAIL: Formação em Metodologias do Ensino de Matemática
+  Para usar no RD Station Marketing: cole este HTML no editor de HTML do e-mail.
+  ANTES DE ENVIAR:
+  1) Suba a arte "Metodologias_do_Ensino_de_Matemática.png" na biblioteca de imagens do RD Station.
+  2) Substitua o texto {{URL_DA_ARTE}} abaixo pela URL gerada pelo RD.
+  3) Substitua {{URL_DA_LISTA_DE_PRESENCA}} pelo link do PDF da lista de presença hospedado no RD.
+  4) Confira o link do vídeo — já está preenchido.
+-->
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4efe8; padding:24px 0;">
+  <tr>
+    <td align="center">
+      <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="background-color:#ffffff; border-radius:12px; overflow:hidden; font-family:Arial, Helvetica, sans-serif; max-width:600px; width:100%;">
+
+        <!-- Arte principal -->
+        <tr>
+          <td>
+            <a href="https://meet.google.com/tiu-urvz-rho" target="_blank">
+              <img src="https://imagensplanoae.my.canva.site/_assets/media/4c992b001fe99b7672657e97cf7a45a5.png" alt="Metodologias do Ensino de Matemática" width="600" style="display:block; width:100%; max-width:600px; height:auto; border:0;">
+            </a>
+          </td>
+        </tr>
+
+        <!-- Saudação -->
+        <tr>
+          <td style="padding:28px 32px 8px 32px;">
+            <p style="margin:0; font-size:16px; line-height:1.6; color:#333333;">
+              Queridos gestores, temos um recado importante para você que quer ampliar o ensino de Matemática na sua escola! 📐
+            </p>
+          </td>
+        </tr>
+
+        <!-- Corpo -->
+        <tr>
+          <td style="padding:12px 32px 0 32px;">
+            <p style="margin:0 0 16px 0; font-size:15px; line-height:1.7; color:#444444;">
+              Ensinar Matemática com intencionalidade exige formação, planejamento e metodologias adequadas. Por isso, preparamos uma jornada especial para nossas escolas parceiras! Ao final dela, sua escola poderá ser <strong style="color:#50b0a7;">certificada pela nossa editora</strong>.
+            </p>
+          </td>
+        </tr>
+
+        <!-- Bloco de destaque com infos do evento -->
+        <tr>
+          <td style="padding:8px 32px 24px 32px;">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4efe8; border-radius:10px;">
+              <tr>
+                <td style="padding:20px 24px;">
+                  <table role="presentation" width="100%" cellpadding="0" cellspacing="8">
+                    <tr>
+                      <td style="font-size:15px; color:#333333; padding:6px 0;">💻&nbsp;&nbsp;<strong>4 encontros</strong> on-line e gravados</td>
+                    </tr>
+                    <tr>
+                      <td style="font-size:15px; color:#333333; padding:6px 0;">📅&nbsp;&nbsp;Todas as <strong>segundas-feiras de agosto</strong>, às 20h</td>
+                    </tr>
+                    <tr>
+                      <td style="font-size:15px; color:#333333; padding:6px 0;">➗&nbsp;&nbsp;Metodologias práticas para o ensino de Matemática</td>
+                    </tr>
+                    <tr>
+                      <td style="font-size:15px; color:#333333; padding:6px 0;">👩‍🏫&nbsp;&nbsp;Conteúdo aplicável pelos professores em sala de aula</td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <!-- Call to action -->
+        <tr>
+          <td align="center" style="padding:0 32px 12px 32px;">
+            <p style="margin:0 0 20px 0; font-size:15px; line-height:1.6; color:#444444;">
+              Assista ao vídeo, salve o link fixo do Meet e baixe a lista de presença. No vídeo estão todas as instruções.
+            </p>
+            <a href="https://youtube.com/shorts/JAgIou41ClI?si=4KLJSb9SoZwcxXel" target="_blank" style="display:inline-block; background-color:#f38932; color:#ffffff; text-decoration:none; font-weight:bold; font-size:15px; padding:14px 32px; border-radius:8px;">
+              ▶️ Assistir ao vídeo
+            </a>
+          </td>
+        </tr>
+
+        <!-- Link secundário: lista de presença -->
+        <tr>
+          <td align="center" style="padding:0 32px 28px 32px;">
+            <a href="https://editoracrista.org/pesquisa/Lista_de_Presenca_Metodologias_Matematica.pdf" target="_blank" style="color:#50b0a7; font-size:14px; font-weight:bold; text-decoration:underline;">
+              📄 Baixar lista de presença
+            </a>
+          </td>
+        </tr>
+
+        <!-- Reforço institucional -->
+        <tr>
+          <td style="padding:0 32px 28px 32px;">
+            <p style="margin:0; font-size:14px; line-height:1.6; color:#666666;">
+              📜 A participação contribui para o processo de certificação das escolas. Nosso objetivo é garantir que todas as escolas participantes cumpram os requisitos necessários e sejam devidamente certificadas. 🎯
+            </p>
+          </td>
+        </tr>
+
+        <!-- Rodapé -->
+        <tr>
+          <td style="background-color:#50b0a7; padding:18px 32px; text-align:center;">
+            <p style="margin:0; font-size:12px; color:#ffffff;">
+              Alicerces do Ensino • Editora Cristã Evangélica<br>
+              Você recebeu este e-mail por ser uma escola parceira Alicerces.
+            </p>
+          </td>
+        </tr>
+
+      </table>
+    </td>
+  </tr>
+</table>
