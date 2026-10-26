@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulador de Prazo de Compra | Alicerces do Ensino</title>
+<meta name="description" content="Calcule a data limite para realizar a compra dos materiais, considerando dias úteis e feriados nacionais, de acordo com a região de entrega.">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%2350b0a7'/%3E%3Ctext x='50' y='68' font-size='60' text-anchor='middle' fill='white' font-family='Arial'%3E%F0%9F%93%86%3C/text%3E%3C/svg%3E">
+
+<style>
+  :root {
+    --cor-primaria: #50b0a7;
+    --cor-primaria-escura: #3d8b83;
+    --cor-secundaria: #f38932;
+    --cor-secundaria-escura: #d9721f;
+    --cor-texto: #1f2d2b;
+    --cor-texto-suave: #5b6b68;
+    --cor-fundo: #f4f9f8;
+    --cor-card: #ffffff;
+    --cor-borda: #dbe8e6;
+    --cor-erro: #c0392b;
+    --sombra-card: 0 10px 30px rgba(31, 45, 43, 0.08);
+    --raio: 16px;
+    --espaco-1: 8px;
+    --espaco-2: 16px;
+    --espaco-3: 24px;
+    --espaco-4: 32px;
+    --espaco-5: 48px;
+  }
+
+  * { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    margin: 0;
+    font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+    background: linear-gradient(180deg, #eaf5f3 0%, var(--cor-fundo) 320px);
+    color: var(--cor-texto);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  *:focus-visible {
+    outline: 3px solid var(--cor-secundaria);
+    outline-offset: 2px;
+  }
+
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: var(--espaco-4) var(--espaco-2) var(--espaco-5);
+  }
+
+  header.topo {
+    text-align: center;
+    padding: var(--espaco-5) var(--espaco-2) var(--espaco-2);
+  }
+
+  .selo {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(80, 176, 167, 0.12);
+    color: var(--cor-primaria-escura);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border-radius: 999px;
+    margin-bottom: var(--espaco-2);
+  }
+
+  h1 {
+    font-size: clamp(26px, 4.5vw, 38px);
+    font-weight: 800;
+    margin: 0 0 var(--espaco-1);
+    color: var(--cor-texto);
+  }
+
+  h1 span { color: var(--cor-primaria); }
+
+  .subtitulo {
+    font-size: 16px;
+    color: var(--cor-texto-suave);
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  main {
+    margin-top: var(--espaco-4);
+  }
+
+  .card {
+    background: var(--cor-card);
+    border-radius: var(--raio);
+    box-shadow: var(--sombra-card);
+    padding: var(--espaco-4);
+    border: 1px solid var(--cor-borda);
+  }
+
+  .card + .card { margin-top: var(--espaco-3); }
+
+  fieldset {
+    border: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  legend {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--cor-primaria-escura);
+    padding: 0 0 var(--espaco-3);
+  }
+
+  .campo {
+    margin-bottom: var(--espaco-3);
+  }
+
+  .campo:last-child { margin-bottom: 0; }
+
+  label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--cor-texto);
+    margin-bottom: var(--espaco-1);
+  }
+
+  .campo-ajuda {
+    font-size: 13px;
+    color: var(--cor-texto-suave);
+    margin-top: 6px;
+  }
+
+  input[type="text"],
+  select {
+    width: 100%;
+    font-size: 16px;
+    font-family: inherit;
+    color: var(--cor-texto);
+    background: #fbfdfd;
+    border: 2px solid var(--cor-borda);
+    border-radius: 10px;
+    padding: 13px 14px;
+    transition: border-color 160ms ease, box-shadow 160ms ease;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+
+  select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%235b6b68' stroke-width='2'%3E%3Cpath d='M5 7l5 5 5-5'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    background-size: 16px;
+    padding-right: 40px;
+    cursor: pointer;
+  }
+
+  input[type="text"]:hover,
+  select:hover {
+    border-color: #b9d6d2;
+  }
+
+  input[type="text"]:focus,
+  select:focus {
+    border-color: var(--cor-primaria);
+    box-shadow: 0 0 0 4px rgba(80, 176, 167, 0.15);
+    outline: none;
+  }
+
+  input.campo-invalido {
+    border-color: var(--cor-erro);
+  }
+
+  input.campo-invalido:focus {
+    box-shadow: 0 0 0 4px rgba(192, 57, 43, 0.15);
+  }
+
+  .mensagem-erro {
+    display: none;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--cor-erro);
+    margin-top: 6px;
+  }
+
+  .mensagem-erro.visivel { display: flex; }
+
+  .badge-prazo {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(243, 137, 50, 0.1);
+    border: 1.5px dashed var(--cor-secundaria);
+    color: var(--cor-secundaria-escura);
+    font-weight: 700;
+    font-size: 15px;
+    padding: 10px 16px;
+    border-radius: 10px;
+  }
+
+  .badge-prazo .numero {
+    font-size: 20px;
+    font-weight: 800;
+  }
+
+  /* Resultado */
+  .resultado {
+    margin-top: var(--espaco-3);
+    border-radius: var(--raio);
+    overflow: hidden;
+    border: 1px solid var(--cor-borda);
+    box-shadow: var(--sombra-card);
+    background: var(--cor-card);
+    opacity: 0;
+    transform: translateY(8px);
+    max-height: 0;
+    transition: opacity 320ms ease, transform 320ms ease;
+  }
+
+  .resultado.visivel {
+    opacity: 1;
+    transform: translateY(0);
+    max-height: none;
+  }
+
+  .resultado-topo {
+    background: linear-gradient(135deg, var(--cor-primaria) 0%, var(--cor-primaria-escura) 100%);
+    color: #ffffff;
+    padding: var(--espaco-3) var(--espaco-4);
+  }
+
+  .resultado-topo .rotulo {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    opacity: 0.9;
+    margin-bottom: 4px;
+  }
+
+  .resultado-topo .data-limite {
+    font-size: clamp(28px, 6vw, 40px);
+    font-weight: 800;
+    letter-spacing: 0.01em;
+  }
+
+  .resultado-corpo {
+    padding: var(--espaco-3) var(--espaco-4) var(--espaco-4);
+  }
+
+  .linha-dado {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: var(--espaco-2);
+    padding: 12px 0;
+    border-bottom: 1px solid var(--cor-borda);
+  }
+
+  .linha-dado:last-of-type { border-bottom: none; }
+
+  .linha-dado .rotulo-dado {
+    font-size: 14px;
+    color: var(--cor-texto-suave);
+    font-weight: 600;
+  }
+
+  .linha-dado .valor-dado {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--cor-texto);
+    text-align: right;
+  }
+
+  .alerta-feriado {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    background: rgba(243, 137, 50, 0.08);
+    border: 1px solid rgba(243, 137, 50, 0.35);
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-top: var(--espaco-2);
+    font-size: 13.5px;
+    color: #8a4d16;
+  }
+
+  .alerta-feriado svg { flex-shrink: 0; margin-top: 2px; }
+
+  .observacao {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    margin-top: var(--espaco-3);
+    padding-top: var(--espaco-3);
+    border-top: 1px dashed var(--cor-borda);
+    font-size: 13px;
+    color: var(--cor-texto-suave);
+  }
+
+  .observacao svg {
+    flex-shrink: 0;
+    color: var(--cor-primaria);
+    margin-top: 1px;
+  }
+
+  .estado-vazio {
+    text-align: center;
+    padding: var(--espaco-4) var(--espaco-2);
+    color: var(--cor-texto-suave);
+    font-size: 14px;
+  }
+
+  .estado-vazio svg {
+    color: var(--cor-borda);
+    margin-bottom: var(--espaco-2);
+  }
+
+  footer.rodape {
+    text-align: center;
+    margin-top: var(--espaco-5);
+    font-size: 12.5px;
+    color: var(--cor-texto-suave);
+  }
+
+  footer.rodape strong { color: var(--cor-primaria-escura); }
+
+  @media (max-width: 480px) {
+    .container { padding: var(--espaco-3) var(--espaco-2) var(--espaco-4); }
+    header.topo { padding: var(--espaco-4) var(--espaco-1) var(--espaco-1); }
+    .card { padding: var(--espaco-3); }
+    .resultado-topo, .resultado-corpo { padding-left: var(--espaco-3); padding-right: var(--espaco-3); }
+    .linha-dado { flex-direction: column; gap: 2px; }
+    .linha-dado .valor-dado { text-align: left; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <header class="topo">
+    <span class="selo">Alicerces do Ensino</span>
+    <h1>Simulador de <span>prazo de compra</span></h1>
+    <p class="subtitulo">Informe a data em que deseja receber os materiais e descubra até quando a compra precisa ser realizada.</p>
+  </header>
+
+  <main>
+    <section class="card" aria-labelledby="titulo-formulario">
+      <form id="form-simulador" novalidate>
+        <fieldset>
+          <legend id="titulo-formulario">Dados para o cálculo</legend>
+
+          <div class="campo">
+            <label for="data-recebimento">Data desejada para recebimento</label>
+            <input
+              type="text"
+              id="data-recebimento"
+              name="data-recebimento"
+              inputmode="numeric"
+              placeholder="dd/mm/aaaa"
+              maxlength="10"
+              autocomplete="off"
+              aria-describedby="ajuda-data erro-data"
+            >
+            <p class="campo-ajuda" id="ajuda-data">Formato: dia/mês/ano — ex.: 20/11/2027</p>
+            <p class="mensagem-erro" id="erro-data" role="alert" aria-live="polite"></p>
+          </div>
+
+          <div class="campo">
+            <label for="regiao-entrega">Região de entrega</label>
+            <select id="regiao-entrega" name="regiao-entrega" aria-describedby="ajuda-regiao">
+              <option value="">Selecione a região</option>
+              <option value="Sul">Sul</option>
+              <option value="Sudeste">Sudeste</option>
+              <option value="Centro-Oeste">Centro-Oeste</option>
+              <option value="Norte">Norte</option>
+              <option value="Nordeste">Nordeste</option>
+            </select>
+            <p class="campo-ajuda" id="ajuda-regiao">O prazo em dias úteis é preenchido automaticamente conforme a região.</p>
+          </div>
+
+          <div class="campo" id="bloco-prazo" hidden>
+            <label id="label-prazo">Prazo em dias úteis</label>
+            <div class="badge-prazo" role="status" aria-labelledby="label-prazo">
+              <span>Até</span>
+              <span class="numero" id="valor-prazo">—</span>
+              <span>dias úteis</span>
+            </div>
+          </div>
+        </fieldset>
+      </form>
+    </section>
+
+    <section class="resultado" id="bloco-resultado" aria-live="polite">
+      <div class="resultado-topo">
+        <div class="rotulo">Data limite para realizar a compra</div>
+        <div class="data-limite" id="texto-data-limite">—</div>
+      </div>
+      <div class="resultado-corpo">
+        <div class="linha-dado">
+          <span class="rotulo-dado">Data desejada para recebimento</span>
+          <span class="valor-dado" id="resumo-data-recebimento">—</span>
+        </div>
+        <div class="linha-dado">
+          <span class="rotulo-dado">Região</span>
+          <span class="valor-dado" id="resumo-regiao">—</span>
+        </div>
+        <div class="linha-dado">
+          <span class="rotulo-dado">Prazo considerado</span>
+          <span class="valor-dado" id="resumo-prazo">—</span>
+        </div>
+
+        <div class="alerta-feriado" id="alerta-feriados" hidden>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/></svg>
+          <span id="texto-alerta-feriados"></span>
+        </div>
+
+        <div class="observacao">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+          <span>Esta data é uma estimativa calculada com base no prazo máximo de entrega informado para a região selecionada. Fatores operacionais ou logísticos podem eventualmente alterar o prazo real.</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="card estado-vazio" id="estado-vazio">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></svg>
+      <p>Preencha a data desejada e a região para ver a data limite de compra.</p>
+    </section>
+  </main>
+
+  <footer class="rodape">
+    Cálculo baseado apenas em <strong>dias úteis</strong> (segunda a sexta-feira), desconsiderando finais de semana e feriados nacionais brasileiros.
+  </footer>
+
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  // ---------- Configuração de prazos por região ----------
+  var PRAZOS_REGIAO = {
+    "Sul": 14,
+    "Sudeste": 14,
+    "Centro-Oeste": 17,
+    "Norte": 22,
+    "Nordeste": 22
+  };
+
+  // ---------- Elementos ----------
+  var inputData = document.getElementById("data-recebimento");
+  var selectRegiao = document.getElementById("regiao-entrega");
+  var blocoPrazo = document.getElementById("bloco-prazo");
+  var valorPrazoEl = document.getElementById("valor-prazo");
+  var erroData = document.getElementById("erro-data");
+  var blocoResultado = document.getElementById("bloco-resultado");
+  var estadoVazio = document.getElementById("estado-vazio");
+
+  var textoDataLimite = document.getElementById("texto-data-limite");
+  var resumoDataRecebimento = document.getElementById("resumo-data-recebimento");
+  var resumoRegiao = document.getElementById("resumo-regiao");
+  var resumoPrazo = document.getElementById("resumo-prazo");
+  var alertaFeriados = document.getElementById("alerta-feriados");
+  var textoAlertaFeriados = document.getElementById("texto-alerta-feriados");
+
+  var NOMES_MES = ["janeiro","fevereiro","março","abril","maio","junho","julho","agosto","setembro","outubro","novembro","dezembro"];
+
+  // ---------- Máscara de data dd/mm/aaaa ----------
+  inputData.addEventListener("input", function (e) {
+    var digitos = e.target.value.replace(/\D/g, "").slice(0, 8);
+    var formatado = digitos;
+    if (digitos.length > 4) {
+      formatado = digitos.slice(0, 2) + "/" + digitos.slice(2, 4) + "/" + digitos.slice(4);
+    } else if (digitos.length > 2) {
+      formatado = digitos.slice(0, 2) + "/" + digitos.slice(2);
+    }
+    e.target.value = formatado;
+    processar();
+  });
+
+  inputData.addEventListener("blur", function () { processar(); });
+  selectRegiao.addEventListener("change", function () { processar(); });
+
+  // ---------- Cálculo de feriados nacionais (fixos + móveis via Páscoa) ----------
+  // Algoritmo de Gauss/Meeus para calcular a data da Páscoa (domingo) em qualquer ano.
+  function calcularPascoa(ano) {
+    var a = ano % 19;
+    var b = Math.floor(ano / 100);
+    var c = ano % 100;
+    var d = Math.floor(b / 4);
+    var e = b % 4;
+    var f = Math.floor((b + 8) / 25);
+    var g = Math.floor((b - f + 1) / 3);
+    var h = (19 * a + b - d - g + 15) % 30;
+    var i = Math.floor(c / 4);
+    var k = c % 4;
+    var l = (32 + 2 * e + 2 * i - h - k) % 7;
+    var m = Math.floor((a + 11 * h + 22 * l) / 451);
+    var mes = Math.floor((h + l - 7 * m + 114) / 31); // 3 = março, 4 = abril
+    var dia = ((h + l - 7 * m + 114) % 31) + 1;
+    return new Date(ano, mes - 1, dia);
+  }
+
+  function somarDias(data, dias) {
+    var d = new Date(data.getTime());
+    d.setDate(d.getDate() + dias);
+    return d;
+  }
+
+  function chaveData(data) {
+    return data.getFullYear() + "-" + (data.getMonth() + 1) + "-" + data.getDate();
+  }
+
+  // Retorna um Set com as chaves (ano-mes-dia) de todos os feriados nacionais de um ano.
+  var cacheFeriados = {};
+  function feriadosNacionaisDoAno(ano) {
+    if (cacheFeriados[ano]) return cacheFeriados[ano];
+
+    var lista = [];
+
+    // Feriados fixos nacionais
+    lista.push(new Date(ano, 0, 1));   // Confraternização Universal
+    lista.push(new Date(ano, 3, 21));  // Tiradentes
+    lista.push(new Date(ano, 4, 1));   // Dia do Trabalho
+    lista.push(new Date(ano, 8, 7));   // Independência do Brasil
+    lista.push(new Date(ano, 9, 12));  // Nossa Senhora Aparecida
+    lista.push(new Date(ano, 10, 2));  // Finados
+    lista.push(new Date(ano, 10, 15)); // Proclamação da República
+    lista.push(new Date(ano, 10, 20)); // Consciência Negra (feriado nacional a partir de 2024, Lei 14.759/2023)
+    lista.push(new Date(ano, 11, 25)); // Natal
+
+    // Feriados móveis (calculados a partir da Páscoa)
+    var pascoa = calcularPascoa(ano);
+    lista.push(pascoa);                       // Páscoa (domingo — cai naturalmente fora de dias úteis, mantido por completude)
+    lista.push(somarDias(pascoa, -48));        // Carnaval (segunda-feira)
+    lista.push(somarDias(pascoa, -47));        // Carnaval (terça-feira)
+    lista.push(somarDias(pascoa, -2));         // Sexta-feira Santa
+    lista.push(somarDias(pascoa, 60));         // Corpus Christi
+
+    var set = {};
+    lista.forEach(function (d) { set[chaveData(d)] = true; });
+    cacheFeriados[ano] = set;
+    return set;
+  }
+
+  function ehFeriadoNacional(data) {
+    var set = feriadosNacionaisDoAno(data.getFullYear());
+    return !!set[chaveData(data)];
+  }
+
+  function ehFimDeSemana(data) {
+    var dia = data.getDay(); // 0 = domingo, 6 = sábado
+    return dia === 0 || dia === 6;
+  }
+
+  function ehDiaUtil(data) {
+    return !ehFimDeSemana(data) && !ehFeriadoNacional(data);
+  }
+
+  // Conta "diasUteis" dias úteis retroativamente a partir de dataFinal (exclusive),
+  // pulando finais de semana e feriados nacionais.
+  // Retorna a data limite e a lista de feriados encontrados no percurso.
+  function calcularDataLimiteRetroativa(dataFinal, diasUteis) {
+    var atual = new Date(dataFinal.getTime());
+    var contados = 0;
+    var feriadosEncontrados = [];
+
+    while (contados < diasUteis) {
+      atual = somarDias(atual, -1);
+      if (ehFimDeSemana(atual)) {
+        continue;
+      }
+      if (ehFeriadoNacional(atual)) {
+        feriadosEncontrados.push(new Date(atual.getTime()));
+        continue;
+      }
+      contados++;
+    }
+
+    return { dataLimite: atual, feriados: feriadosEncontrados };
+  }
+
+  // ---------- Validação e parsing da data digitada ----------
+  function parsearData(texto) {
+    var m = texto.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+    if (!m) return null;
+    var dia = parseInt(m[1], 10);
+    var mes = parseInt(m[2], 10);
+    var ano = parseInt(m[3], 10);
+    if (mes < 1 || mes > 12) return null;
+    var diasNoMes = new Date(ano, mes, 0).getDate();
+    if (dia < 1 || dia > diasNoMes) return null;
+    if (ano < 1900 || ano > 2200) return null;
+    var data = new Date(ano, mes - 1, dia);
+    return data;
+  }
+
+  function formatarDataExtenso(data) {
+    return String(data.getDate()).padStart(2, "0") + " de " + NOMES_MES[data.getMonth()] + " de " + data.getFullYear();
+  }
+
+  function formatarDataCurta(data) {
+    return String(data.getDate()).padStart(2, "0") + "/" + String(data.getMonth() + 1).padStart(2, "0") + "/" + data.getFullYear();
+  }
+
+  function mostrarErroData(mensagem) {
+    inputData.classList.add("campo-invalido");
+    inputData.setAttribute("aria-invalid", "true");
+    erroData.textContent = mensagem;
+    erroData.classList.add("visivel");
+  }
+
+  function limparErroData() {
+    inputData.classList.remove("campo-invalido");
+    inputData.removeAttribute("aria-invalid");
+    erroData.textContent = "";
+    erroData.classList.remove("visivel");
+  }
+
+  function esconderResultado() {
+    blocoResultado.classList.remove("visivel");
+    estadoVazio.hidden = false;
+  }
+
+  // ---------- Orquestração principal ----------
+  function processar() {
+    var textoData = inputData.value.trim();
+    var regiao = selectRegiao.value;
+
+    // Atualiza o badge de prazo conforme a região
+    if (regiao && PRAZOS_REGIAO.hasOwnProperty(regiao)) {
+      blocoPrazo.hidden = false;
+      valorPrazoEl.textContent = PRAZOS_REGIAO[regiao];
+    } else {
+      blocoPrazo.hidden = true;
+    }
+
+    // Data incompleta: não valida ainda, apenas não calcula
+    if (textoData.length === 0) {
+      limparErroData();
+      esconderResultado();
+      return;
+    }
+
+    if (textoData.length < 10) {
+      limparErroData();
+      esconderResultado();
+      return;
+    }
+
+    var dataRecebimento = parsearData(textoData);
+    if (!dataRecebimento) {
+      mostrarErroData("Data inválida. Use o formato dd/mm/aaaa.");
+      esconderResultado();
+      return;
+    }
+
+    limparErroData();
+
+    if (!regiao) {
+      esconderResultado();
+      return;
+    }
+
+    var diasUteis = PRAZOS_REGIAO[regiao];
+    var resultado = calcularDataLimiteRetroativa(dataRecebimento, diasUteis);
+
+    // Preenche resultado
+    textoDataLimite.textContent = formatarDataCurta(resultado.dataLimite);
+    resumoDataRecebimento.textContent = formatarDataCurta(dataRecebimento);
+    resumoRegiao.textContent = regiao;
+    resumoPrazo.textContent = "até " + diasUteis + " dias úteis";
+
+    if (resultado.feriados.length > 0) {
+      var nomes = resultado.feriados
+        .sort(function (a, b) { return a - b; })
+        .map(function (d) { return formatarDataCurta(d); })
+        .join(", ");
+      var plural = resultado.feriados.length > 1;
+      textoAlertaFeriados.textContent =
+        (plural ? "Os feriados nacionais " : "O feriado nacional ") + nomes +
+        (plural ? " caem dentro do período e foram desconsiderados da contagem, empurrando a data limite para um dia útil anterior."
+                 : " cai dentro do período e foi desconsiderado da contagem, empurrando a data limite para um dia útil anterior.");
+      alertaFeriados.hidden = false;
+    } else {
+      alertaFeriados.hidden = true;
+    }
+
+    estadoVazio.hidden = true;
+    blocoResultado.classList.add("visivel");
+  }
+
+  // Estado inicial
+  esconderResultado();
+})();
+</script>
+
+</body>
+</html>
